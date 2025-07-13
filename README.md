@@ -1,5 +1,5 @@
 
-**MailMorph**
+MailMorph
 
 MailMorph is a backend automation tool that connects to the Gmail API, fetches emails, stores them in a PostgreSQL database, and applies custom rules (defined in rules.json) to take automated actions like marking emails as read or unread, or moving them to specific labels.
 
@@ -39,12 +39,11 @@ Setup Instructions
 	3.	Set up a Gmail API project in Google Cloud Console
 	4.	Download the credentials JSON and save it as credentials.json in the root folder
 	5.	Create a .env file and add your PostgreSQL connection string
-
 Example:
 DATABASE_URL=postgresql://your_user:your_password@localhost:5432/your_database
-	6.	Run the OAuth setup to generate tokens
+	6.	Run the OAuth setup to generate tokens:
 npx ts-node src/testGmail.ts
-	7.	Run the main application
+	7.	Run the main application:
 npx ts-node src/index.ts
 
 Rule Engine
@@ -67,3 +66,6 @@ Supported actions:
 License
 
 MIT License
+
+
+
