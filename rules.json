@@ -1,0 +1,11 @@
+[
+  {
+    "criteria": {"from": "newsletter@example.com"},
+    "actions": ["applyLabel:NEWSLETTERS"]
+  },
+  {
+    "criteria": {"subject": "Invoice"},
+    "actions": ["markRead"]
+  }
+]
+

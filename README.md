@@ -1,71 +1,85 @@
+# Gmail Automation Python Project
 
-MailMorph
+Automate Gmail workflows using Python. Fetch emails, apply rules from `rules.json`, and save results to PostgreSQL.
 
-MailMorph is a backend automation tool that connects to the Gmail API, fetches emails, stores them in a PostgreSQL database, and applies custom rules (defined in rules.json) to take automated actions like marking emails as read or unread, or moving them to specific labels.
+## Features
+- Gmail API authentication (OAuth2)
+- Fetch unread emails
+- Parse sender, subject, snippet, timestamp
+- Apply rules (label, mark as read, etc.) from `rules.json`
+- Save results to PostgreSQL
+- Unit tests for all major modules
 
-Features
-	•	Connects to Gmail using OAuth 2.0  
-	•	Fetches unread or recent emails using the Gmail API  
-	•	Parses sender, subject, snippet, and timestamp  
-	•	Stores email metadata in PostgreSQL  
-	•	Applies user-defined rules to automate email actions  
-	•	Supports modular actions such as labeling or marking as read  
-	•	Uses environment variables securely via .env file  
+## Project Structure
+```
+app/
+  actions.py         # Gmail actions (mark as read, label)
+  auth.py            # Gmail API authentication
+  db.py              # PostgreSQL save logic
+  fetch_emails.py    # Fetch and parse emails
+  main.py            # Main workflow
+  rules_engine.py    # Rule loading and application
+  example_gmail_automation.py # Full workflow example
 
-Tech Stack  
-	•	Node.js  
-	•	TypeScript  
-	•	PostgreSQL  
-	•	Gmail API (googleapis package)  
-	•	pg (PostgreSQL client for Node)  
-	•	dotenv  
-	•	ts-node  
+tests/
+  test_fetch_emails.py
+  test_rules_engine.py
+  test_db.py
 
-Folder Structure  
+rules.json           # Example rules
+requirements.txt     # Python dependencies
+.gitignore           # Git ignore rules
+credentials.json     # Gmail API credentials (not tracked)
+README.md            # Project documentation
+```
 
-src/  
-auth.ts            - Handles Gmail OAuth2 setup  
-db.ts              - Database connection and query functions  
-fetchEmails.ts     - Fetches and parses Gmail messages
-actions.ts         - Performs Gmail actions (label, read/unread)  
-rulesEngine.ts     - Loads and applies rules from rules.json  
-index.ts           - Main execution entry point  
-testGmail.ts       - For testing Gmail connectivity  
-testFetch.ts       - For testing email fetching  
+## Setup
+1. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+2. Set up Gmail API credentials:
+   - Download `credentials.json` from Google Cloud Console.
+   - Place it in the project root.
+3. Set up PostgreSQL and create the `emails` table:
+   ```sql
+   CREATE TABLE emails (
+     id TEXT PRIMARY KEY,
+     from_address TEXT,
+     subject TEXT,
+     snippet TEXT,
+     timestamp TIMESTAMP,
+     actions JSONB
+   );
+   ```
+4. Edit `rules.json` to define your rules.
 
-Setup Instructions  
-	1.	Clone the repository  
-	2.	Run npm install to install dependencies  
-	3.	Set up a Gmail API project in Google Cloud Console  
-	4.	Download the credentials JSON and save it as credentials.json in the root folder  
-	5.	Create a .env file and add your PostgreSQL connection string  
-Example:  
-DATABASE_URL=postgresql://your_user:your_password@localhost:5432/your_database  
-	6.	Run the OAuth setup to generate tokens:  
-npx ts-node src/testGmail.ts  
-	7.	Run the main application:  
-npx ts-node src/index.ts  
+## Running
+Run the main workflow:
+```sh
+python -m app.main
+```
+Or run the full example:
+```sh
+python app/example_gmail_automation.py
+```
 
-Rule Engine  
+## Testing
+Run all tests:
+```sh
+python -m unittest discover tests
+```
 
-Define your automation rules in a rules.json file. Example rule:  
-
-[  
-{  
-“from”: “example@example.com”,  
-“subjectContains”: “Invoice”,  
-“actions”: [“markAsRead”, “applyLabel:Finance”]  
-}  
-]  
-
-Supported actions:  
-	•	markAsRead  
-	•	markAsUnread  
-	•	applyLabel:  
-
-License  
-
-MIT License  
-
-
-
+## Example `rules.json`
+```json
+[
+  {
+    "criteria": {"from": "newsletter@example.com"},
+    "actions": ["applyLabel:NEWSLETTERS"]
+  },
+  {
+    "criteria": {"subject": "Invoice"},
+    "actions": ["markRead"]
+  }
+]
+```
